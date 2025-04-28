@@ -17,6 +17,9 @@ public class PlayerController : MonoBehaviour
     public AudioClip jumpSound;
     private AudioSource playerAudio;
     public bool hasDoubleJumped = false;
+    
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,22 +29,23 @@ public class PlayerController : MonoBehaviour
         playerAudio = GetComponent<AudioSource>();
     }
 
-    private void JumpPlayer(KeyCode Key, bool isOnGround, bool isGameOver)
+    void Update()
     {
-        if (Input.GetKeyDown(Key) && isOnGround && !isGameOver)
+        if (Input.GetKeyDown(KeyCode.Space) && isOnGround && !gameOver)
         {
             playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             playerAnim.SetTrigger("Jump_trig");
             playerAudio.PlayOneShot(jumpSound);
+            isOnGround = false;
         }
  
-        else if (Input.GetKeyDown(Key) && !isOnGround && !isGameOver && !HasDoubleJumped)
+        else if (Input.GetKeyDown(KeyCode.Space) && !isOnGround && !gameOver && !hasDoubleJumped)
         {
             hasDoubleJumped = true;
-            playreRb.velocity = Vector3.zero;
-            PlayerRigidBody.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
-            PlayerAnimator.SetTrigger("Jump_trig");
-            PlayerAudioSource.PlayOneShot(JumpSoundEffect);
+            playerRb.velocity = Vector3.zero;
+            playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            playerAnim.SetTrigger("Jump_trig");
+            playerAudio.PlayOneShot(jumpSound);
         }
     }
 
@@ -50,6 +54,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             isOnGround = true;
+            hasDoubleJumped = false;
             dirtParticle.Play();
         }
         else if (collision.gameObject.CompareTag("Obstacle"))
@@ -62,5 +67,6 @@ public class PlayerController : MonoBehaviour
             dirtParticle.Stop();
             playerAudio.PlayOneShot(crashSound, 1.0f);
         }
+       
     }
 }
