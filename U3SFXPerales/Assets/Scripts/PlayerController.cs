@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     public AudioClip jumpSound;
     private AudioSource playerAudio;
     public bool hasDoubleJumped = false;
-    
+     
 
 
     // Start is called before the first frame update
